@@ -74,15 +74,6 @@ Ver **[INSTRUCCIONES.md](INSTRUCCIONES.md)** para el proceso completo de:
 
 ---
 
-## 🔋 Easter Egg
-
-Recolecta la **batería naranja** que aparece aleatoriamente para activar:
-- ⚡ Modo Turbo (velocidad aumentada)
-- 🛡️ Invencibilidad por 10 segundos
-- ✨ Efecto visual amarillo
-
----
-
 ## 👥 Créditos
 
 **Desarrolladores:**
