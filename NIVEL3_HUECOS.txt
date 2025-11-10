@@ -1,0 +1,204 @@
+════════════════════════════════════════════════════════════════
+    🕳️ NIVEL 3 - SISTEMA DE HUECOS IMPLEMENTADO
+════════════════════════════════════════════════════════════════
+
+✅ COMPLETADO Y FUNCIONANDO
+
+════════════════════════════════════════════════════════════════
+  🎮 NIVEL 3: "PLANTA NUCLEAR CON AGUJEROS"
+════════════════════════════════════════════════════════════════
+
+CONCEPTO:
+  • El suelo tiene HUECOS peligrosos
+  • Si caes en un hueco = PIERDES 1 VIDA 💀
+  • Plataformas naranjas sobre huecos grandes (para ayudarte)
+  • Requiere saltos precisos y timing
+
+════════════════════════════════════════════════════════════════
+  🏃 SECUENCIA DEL NIVEL 3
+════════════════════════════════════════════════════════════════
+
+FASE 1 (2000-2200m):
+  • Obstáculos normales (como nivel 1 y 2)
+  • Te adaptas al nivel 3
+  • Sin huecos aún
+
+FASE 2 (2200m+):
+  • ¡HUECOS ACTIVADOS! 🕳️
+  • Aparecen agujeros en el suelo
+  • Si caes = pierdes vida
+  • Plataformas sobre huecos grandes
+
+════════════════════════════════════════════════════════════════
+  🎯 3 PATRONES DE HUECOS
+════════════════════════════════════════════════════════════════
+
+PATRÓN 1: "Hueco Pequeño" (40% probabilidad)
+┌─────────────────────────────────┐
+│                                  │
+│  ════╔═══╗════════════════════  │ ← Suelo
+│      ║🕳️║                        │ ← Hueco 150px
+└─────────────────────────────────┘
+• Hueco de 150px
+• Fácil de saltar con timing normal
+• Introduce la mecánica
+
+---
+
+PATRÓN 2: "Hueco Grande con Salvavidas" (30% probabilidad)
+┌─────────────────────────────────┐
+│        [PLATAFORMA NARANJA]      │
+│  ════╔════════════╗═════════════ │ ← Suelo
+│      ║    🕳️     ║              │ ← Hueco 350px
+└─────────────────────────────────┘
+• Hueco GRANDE de 350px
+• ¡Imposible saltarlo directo!
+• Plataforma naranja en el medio (salvavidas)
+• Tienes que usarla o mueres
+
+---
+
+PATRÓN 3: "Doble Peligro" (30% probabilidad)
+┌─────────────────────────────────┐
+│                                  │
+│  ══╔══╗════╔══╗═════════════════ │ ← Suelo
+│    ║🕳️║    ║🕳️║                 │ ← 2 Huecos
+└─────────────────────────────────┘
+• DOS huecos pequeños (120px cada uno)
+• Saltos consecutivos rápidos
+• Testing de reflejos
+
+════════════════════════════════════════════════════════════════
+  🎨 VISUAL DE LOS HUECOS
+════════════════════════════════════════════════════════════════
+
+HUECO:
+  • Negro oscuro con transparencia
+  • Líneas ROJAS arriba y abajo (peligro)
+  • Se ve claramente contra el fondo verde
+
+PLATAFORMAS:
+  • Color: NARANJA brillante (contraste perfecto)
+  • Tamaño: 140px x 25px (grandes y visibles)
+  • Solo aparecen sobre huecos grandes
+  • Propósito claro: salvarte de caer
+
+════════════════════════════════════════════════════════════════
+  💀 MECÁNICA DE CAÍDA
+════════════════════════════════════════════════════════════════
+
+SI CAES EN UN HUECO:
+  1. Pierdes 1 vida ❤️
+  2. Efecto de cámara shake (dramático)
+  3. Robot se pone rojo
+  4. Sonido de impacto
+  5. Te reposicionan en posición segura
+  6. 2 segundos de invencibilidad
+
+SI HAY PLATAFORMA:
+  • Puedes pararte en ella
+  • Te salvas de caer
+  • Sigues jugando normal
+
+════════════════════════════════════════════════════════════════
+  ⚙️ DETALLES TÉCNICOS
+════════════════════════════════════════════════════════════════
+
+ACTIVACIÓN:
+  • Se activa a los 2200 metros (200m después de nivel 3)
+  • Mensaje en consola: "🕳️ Huecos activados!"
+
+SPAWN RATE:
+  • Huecos: Cada 3.5 segundos
+  • Obstáculos normales: Cada 4 segundos (muy espaciados)
+  • Bien balanceado
+
+DETECCIÓN:
+  • Verifica posición Y del robot
+  • Si Y > altura_suelo = está cayendo
+  • Verifica si está sobre un hueco
+  • Verifica si hay plataforma debajo
+  • Si no hay plataforma = pierde vida
+
+VELOCIDAD:
+  • Nivel 3 = IGUAL velocidad que nivel 2
+  • Necesitas precisión para los huecos
+  • No es imposible
+
+════════════════════════════════════════════════════════════════
+  🎮 DIFERENCIAS CON NIVELES ANTERIORES
+════════════════════════════════════════════════════════════════
+
+NIVEL 1:
+  • Obstáculos a diferentes alturas
+  • Saltas SOBRE obstáculos
+  • Aprendizaje
+
+NIVEL 2:
+  • Patrones de obstáculos
+  • Mayor velocidad
+  • Saltos sobre obstáculos
+
+NIVEL 3:
+  • HUECOS EN EL SUELO 🕳️
+  • Saltas ENTRE secciones de suelo
+  • Caer = perder vida
+  • Plataformas con propósito claro
+  • Mecánica completamente diferente
+  • Requiere mirar el SUELO, no el aire
+
+════════════════════════════════════════════════════════════════
+  🎯 ESTRATEGIA DE JUEGO
+════════════════════════════════════════════════════════════════
+
+HUECOS PEQUEÑOS:
+  • Salta con timing normal
+  • Como saltar obstáculos normales
+
+HUECOS GRANDES:
+  • ¡USA LA PLATAFORMA NARANJA!
+  • Salta A la plataforma
+  • Luego salta al otro lado
+  • Si intentas saltarlo directo = MUERTE
+
+DOBLES HUECOS:
+  • Saltos rápidos consecutivos
+  • Mantén el ritmo
+  • No te apresures
+
+════════════════════════════════════════════════════════════════
+  🚀 CÓMO PROBAR
+════════════════════════════════════════════════════════════════
+
+1. Recarga el navegador (F5)
+2. Juega hasta 2000 metros (Nivel 3)
+3. Verás fondo VERDE
+4. Sigue hasta 2200 metros
+5. Verás aparecer HUECOS NEGROS con líneas rojas
+6. ¡SALTA los huecos o úsalas plataformas naranjas!
+7. Si caes en un hueco = pierdes vida
+
+════════════════════════════════════════════════════════════════
+  ✨ PROPÓSITO Y SENTIDO
+════════════════════════════════════════════════════════════════
+
+¿POR QUÉ ESTE DISEÑO TIENE SENTIDO?
+
+✓ Planta Nuclear = Lugar peligroso = Huecos lógicos
+✓ Plataformas tienen PROPÓSITO claro (salvarte)
+✓ No son decoración, son NECESARIAS
+✓ Cambia la mecánica completamente
+✓ Diferente a nivel 1 y 2
+✓ Desafiante pero justo
+✓ Visual claro (sabes dónde está el peligro)
+
+════════════════════════════════════════════════════════════════
+
+              ¡SISTEMA DE HUECOS LISTO! ✅
+
+      Recarga y juega hasta 2200m para probarlo
+
+     ¡Ahora el nivel 3 tiene propósito y sentido!
+
+════════════════════════════════════════════════════════════════
+
