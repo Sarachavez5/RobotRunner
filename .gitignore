@@ -7,3 +7,8 @@ ios
 *.log
 .capacitor
 
+# Ignorar archivos de documentación temporal
+*.txt
+*.md
+# Excepto README.md
+!README.md
