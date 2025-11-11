@@ -43,7 +43,8 @@ export class GameScene extends Phaser.Scene {
   private levelText!: Phaser.GameObjects.Text;
   
   private isPaused: boolean = false;
-  private pauseText!: Phaser.GameObjects.Text;
+  private pauseButton!: Phaser.GameObjects.Container;
+  private pauseOverlay!: Phaser.GameObjects.Container;
   
   // Modo vuelo tipo Geometry Dash
   private isFlying: boolean = false;
@@ -543,15 +544,11 @@ export class GameScene extends Phaser.Scene {
       fontFamily: 'Arial'
     }).setOrigin(0.5, 0);
 
-    // Texto de pausa (pequeño, esquina superior derecha, invisible al inicio)
-    this.pauseText = this.add.text(width - 20, 70, 'PAUSA\n(ESC para continuar)', {
-      fontSize: '20px',
-      color: '#ffff00',
-      fontStyle: 'bold',
-      fontFamily: 'Arial',
-      backgroundColor: '#000000',
-      padding: { x: 10, y: 5 }
-    }).setOrigin(1, 0).setVisible(false);
+    // Botón de pausa (visible siempre en la esquina superior derecha)
+    this.createPauseButton();
+    
+    // Crear overlay de pausa (invisible al inicio)
+    this.createPauseOverlay();
   }
 
   private setupControls(): void {
@@ -575,17 +572,184 @@ export class GameScene extends Phaser.Scene {
     });
   }
 
+  private createPauseButton(): void {
+    const { width } = this.cameras.main;
+    
+    this.pauseButton = this.add.container(width - 60, 150);
+    
+    // Fondo del botón
+    const bg = this.add.graphics();
+    bg.fillStyle(0x000000, 0.7);
+    bg.fillRoundedRect(-30, -30, 60, 60, 10);
+    bg.lineStyle(3, 0xffff00);
+    bg.strokeRoundedRect(-30, -30, 60, 60, 10);
+    
+    // Ícono de pausa (dos barras ||)
+    const pauseIcon = this.add.graphics();
+    pauseIcon.fillStyle(0xffff00);
+    pauseIcon.fillRect(-12, -15, 8, 30);
+    pauseIcon.fillRect(4, -15, 8, 30);
+    
+    this.pauseButton.add([bg, pauseIcon]);
+    this.pauseButton.setSize(60, 60);
+    this.pauseButton.setInteractive(new Phaser.Geom.Rectangle(-30, -30, 60, 60), Phaser.Geom.Rectangle.Contains);
+    this.pauseButton.setDepth(1000);
+    
+    // Animación al hacer hover
+    this.pauseButton.on('pointerover', () => {
+      this.tweens.add({
+        targets: this.pauseButton,
+        scaleX: 1.1,
+        scaleY: 1.1,
+        duration: 150
+      });
+    });
+    
+    this.pauseButton.on('pointerout', () => {
+      this.tweens.add({
+        targets: this.pauseButton,
+        scaleX: 1,
+        scaleY: 1,
+        duration: 150
+      });
+    });
+    
+    // Al hacer clic, pausar
+    this.pauseButton.on('pointerdown', (pointer: Phaser.Input.Pointer) => {
+      pointer.event.stopPropagation(); // Evitar que el clic active el salto
+      this.togglePause();
+    });
+  }
+
+  private createPauseOverlay(): void {
+    const { width, height } = this.cameras.main;
+    
+    this.pauseOverlay = this.add.container(0, 0);
+    this.pauseOverlay.setDepth(999);
+    
+    // Fondo oscuro semitransparente
+    const darkBg = this.add.rectangle(width / 2, height / 2, width, height, 0x000000, 0.85);
+    
+    // Panel central
+    const panelWidth = 500;
+    const panelHeight = 550;
+    const panelBg = this.add.graphics();
+    panelBg.fillStyle(0x001a33, 1);
+    panelBg.fillRoundedRect(width / 2 - panelWidth / 2, height / 2 - panelHeight / 2, panelWidth, panelHeight, 20);
+    panelBg.lineStyle(5, 0x00ffff);
+    panelBg.strokeRoundedRect(width / 2 - panelWidth / 2, height / 2 - panelHeight / 2, panelWidth, panelHeight, 20);
+    
+    // Título PAUSA
+    const pauseTitle = this.add.text(width / 2, height / 2 - 180, 'PAUSA', {
+      fontSize: '72px',
+      color: '#ffff00',
+      fontStyle: 'bold',
+      fontFamily: 'Arial',
+      stroke: '#ff8800',
+      strokeThickness: 6
+    }).setOrigin(0.5);
+    
+    // Ícono de pausa grande
+    const pauseIconBig = this.add.graphics();
+    pauseIconBig.fillStyle(0x00ffff);
+    pauseIconBig.fillRect(width / 2 - 40, height / 2 - 80, 25, 80);
+    pauseIconBig.fillRect(width / 2 + 15, height / 2 - 80, 25, 80);
+    
+    // Botón de continuar
+    const continueButton = this.createPauseMenuButton(width / 2, height / 2 + 50, 'CONTINUAR', 0x00aa00, () => {
+      this.togglePause();
+    });
+    
+    // Botón de menú
+    const menuButton = this.createPauseMenuButton(width / 2, height / 2 + 160, 'IR AL MENÚ', 0xaa0000, () => {
+      this.goToMenu();
+    });
+    
+    // Texto de ayuda
+    const helpText = this.add.text(width / 2, height / 2 + 250, 'Presiona ESC o el botón de pausa\npara continuar', {
+      fontSize: '20px',
+      color: '#aaaaaa',
+      fontFamily: 'Arial',
+      align: 'center'
+    }).setOrigin(0.5);
+    
+    this.pauseOverlay.add([darkBg, panelBg, pauseTitle, pauseIconBig, continueButton, menuButton, helpText]);
+    this.pauseOverlay.setVisible(false);
+  }
+
+  private createPauseMenuButton(x: number, y: number, text: string, color: number, callback: () => void): Phaser.GameObjects.Container {
+    const button = this.add.container(x, y);
+    
+    const bg = this.add.graphics();
+    bg.fillStyle(color);
+    bg.fillRoundedRect(-150, -40, 300, 80, 15);
+    bg.fillStyle(color - 0x002200);
+    bg.fillRoundedRect(-145, -35, 290, 70, 12);
+    
+    const label = this.add.text(0, 0, text, {
+      fontSize: '32px',
+      color: '#ffffff',
+      fontStyle: 'bold',
+      fontFamily: 'Arial'
+    }).setOrigin(0.5);
+    
+    button.add([bg, label]);
+    button.setSize(300, 80);
+    button.setInteractive(new Phaser.Geom.Rectangle(-150, -40, 300, 80), Phaser.Geom.Rectangle.Contains);
+    
+    button.on('pointerdown', (pointer: Phaser.Input.Pointer) => {
+      pointer.event.stopPropagation();
+      this.tweens.add({
+        targets: button,
+        scaleX: 0.95,
+        scaleY: 0.95,
+        duration: 100,
+        yoyo: true,
+        onComplete: callback
+      });
+    });
+    
+    button.on('pointerover', () => {
+      this.tweens.add({
+        targets: button,
+        scaleX: 1.1,
+        scaleY: 1.1,
+        duration: 200
+      });
+    });
+    
+    button.on('pointerout', () => {
+      this.tweens.add({
+        targets: button,
+        scaleX: 1,
+        scaleY: 1,
+        duration: 200
+      });
+    });
+    
+    return button;
+  }
+
+  private goToMenu(): void {
+    this.physics.resume();
+    this.isPaused = false;
+    this.cameras.main.fadeOut(300);
+    this.cameras.main.once('camerafadeoutcomplete', () => {
+      this.scene.start('MenuScene');
+    });
+  }
+
   private togglePause(): void {
     this.isPaused = !this.isPaused;
 
     if (this.isPaused) {
       // Pausar el juego
       this.physics.pause();
-      this.pauseText.setVisible(true);
+      this.pauseOverlay.setVisible(true);
     } else {
       // Reanudar el juego
       this.physics.resume();
-      this.pauseText.setVisible(false);
+      this.pauseOverlay.setVisible(false);
     }
   }
 
