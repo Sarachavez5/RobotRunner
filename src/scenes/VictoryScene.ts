@@ -3,14 +3,16 @@ import Phaser from 'phaser';
 export class VictoryScene extends Phaser.Scene {
   private distance: number = 0;
   private level: number = 3;
+  private lives: number = 3;
 
   constructor() {
     super({ key: 'VictoryScene' });
   }
 
-  init(data: { distance: number; level: number }): void {
+  init(data: { distance: number; level: number; lives: number }): void {
     this.distance = data.distance || 0;
     this.level = data.level || 3;
+    this.lives = data.lives || 1;
   }
 
   create(): void {
@@ -150,9 +152,12 @@ export class VictoryScene extends Phaser.Scene {
       });
     });
 
-    // Estrellas
-    const stars = '⭐ ⭐ ⭐';
-    this.add.text(width / 2, 970, stars, {
+    // Estrellas basadas en vidas restantes
+    let stars = '';
+    for (let i = 0; i < this.lives; i++) {
+      stars += '⭐ ';
+    }
+    this.add.text(width / 2, 970, stars.trim(), {
       fontSize: '56px',
       color: '#ffff00',
       fontFamily: 'Arial'
