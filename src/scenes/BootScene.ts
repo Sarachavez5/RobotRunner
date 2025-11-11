@@ -8,7 +8,7 @@ export class BootScene extends Phaser.Scene {
 
   preload(): void {
     console.log('🎮 BootScene preload');
-    // Crear assets con formas geométricas (sin necesidad de archivos externos)
+    // Crear assets gráficos y de audio
     this.createAssets();
   }
 
@@ -18,7 +18,7 @@ export class BootScene extends Phaser.Scene {
   }
 
   private createAssets(): void {
-    // Crear textura del robot
+    // Crear textura de robot jugador 
     const robot = this.add.graphics();
     robot.fillStyle(0x00ff00);
     robot.fillRect(0, 0, 60, 80);
@@ -30,7 +30,7 @@ export class BootScene extends Phaser.Scene {
     robot.generateTexture('robot', 60, 80);
     robot.destroy();
 
-    // Obstáculo tipo 1: Caja baja (roja)
+    // Obstáculo tipo 1: Caja baja 
     const obstacle1 = this.add.graphics();
     obstacle1.fillStyle(0xff0000);
     obstacle1.fillRect(0, 0, 40, 50);
@@ -39,7 +39,7 @@ export class BootScene extends Phaser.Scene {
     obstacle1.generateTexture('obstacle1', 40, 50);
     obstacle1.destroy();
 
-    // Obstáculo tipo 2: Caja alta (naranja)
+    // Obstáculo tipo 2: Caja alta 
     const obstacle2 = this.add.graphics();
     obstacle2.fillStyle(0xff6600);
     obstacle2.fillRect(0, 0, 35, 80);
@@ -48,7 +48,7 @@ export class BootScene extends Phaser.Scene {
     obstacle2.generateTexture('obstacle2', 35, 80);
     obstacle2.destroy();
 
-    // Obstáculo tipo 3: Púas (moradas)
+    // Obstáculo tipo 3: Púa 
     const obstacle3 = this.add.graphics();
     obstacle3.fillStyle(0x9900ff);
     obstacle3.beginPath();
@@ -67,7 +67,7 @@ export class BootScene extends Phaser.Scene {
     obstacle3.generateTexture('obstacle3', 50, 60);
     obstacle3.destroy();
 
-    // Obstáculo tipo 4: Barril (amarillo)
+    // Obstáculo tipo 4: Obstáculo rodante 
     const obstacle4 = this.add.graphics();
     obstacle4.fillStyle(0xffcc00);
     obstacle4.fillCircle(30, 30, 30);
@@ -78,7 +78,7 @@ export class BootScene extends Phaser.Scene {
     obstacle4.generateTexture('obstacle4', 60, 60);
     obstacle4.destroy();
 
-    // Obstáculo tipo 5: Obstáculo volador (cyan)
+    // Obstáculo tipo 5: Obstáculo volador 
     const obstacle5 = this.add.graphics();
     obstacle5.fillStyle(0x00ffff);
     obstacle5.fillRect(0, 15, 45, 30);
@@ -90,7 +90,7 @@ export class BootScene extends Phaser.Scene {
     obstacle5.generateTexture('obstacle5', 45, 60);
     obstacle5.destroy();
 
-    // Crear textura de plataforma/suelo
+    // Crear textura de suelo
     const ground = this.add.graphics();
     ground.fillStyle(0x444444);
     ground.fillRect(0, 0, 800, 100);
@@ -99,7 +99,7 @@ export class BootScene extends Phaser.Scene {
     ground.generateTexture('ground', 800, 100);
     ground.destroy();
 
-    // Crear plataforma de parkour (NARANJA para que contraste con verde)
+    // Crear plataforma de parkour 
     const platform = this.add.graphics();
     platform.fillStyle(0xff6b35); // Naranja brillante
     platform.fillRect(0, 0, 140, 25); // Más grande (140x25)
@@ -110,7 +110,7 @@ export class BootScene extends Phaser.Scene {
     platform.generateTexture('platform', 140, 25);
     platform.destroy();
 
-    // Crear textura de batería (Easter Egg)
+    // Crear textura de batería
     const battery = this.add.graphics();
     battery.fillStyle(0xffaa00);
     battery.fillRect(5, 0, 30, 10);
