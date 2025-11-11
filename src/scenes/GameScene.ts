@@ -18,11 +18,13 @@ export class GameScene extends Phaser.Scene {
   private obstacles!: Phaser.Physics.Arcade.Group;
   private platforms!: Phaser.Physics.Arcade.Group;
   private gaps!: Phaser.GameObjects.Group;
+  private portals!: Phaser.Physics.Arcade.Group;
   private deathZone: number = 0;
   
   // 👻 Colliders para poder desactivarlos durante invencibilidad
   private platformCollider!: Phaser.Physics.Arcade.Collider;
   private obstacleCollider!: Phaser.Physics.Arcade.Collider;
+  private groundCollider!: Phaser.Physics.Arcade.Collider; // ← nuevo
   
   private lives: number = 3;
   private distance: number = 0;
@@ -42,6 +44,13 @@ export class GameScene extends Phaser.Scene {
   
   private isPaused: boolean = false;
   private pauseText!: Phaser.GameObjects.Text;
+  
+  // Modo vuelo tipo Geometry Dash
+  private isFlying: boolean = false;
+  private flyMaxSpeed = 1200; // Velocidad muy rápida para control super responsivo
+  private spaceKey?: Phaser.Input.Keyboard.Key;
+  private flyZoneEntered: boolean = false;
+  private flyZoneExited: boolean = false;
   
   // Sistema de chunks predefinidos
   private levelChunks!: LevelChunk[];
@@ -194,9 +203,9 @@ export class GameScene extends Phaser.Scene {
       {
         distance: 680,
         obstacles: [
-          { x: 0, y: height - 115, type: 'obstacle3' },
-          { x: 300, y: height - 115, type: 'obstacle3' },
-          { x: 600, y: height - 115, type: 'obstacle3' }
+          { x: 180, y: height - 115, type: 'obstacle3' },  // Movida más a la derecha
+          { x: 420, y: height - 115, type: 'obstacle3' },  // Más separada
+          { x: 660, y: height - 115, type: 'obstacle3' }   // Más separada
         ]
       },
 
@@ -211,29 +220,29 @@ export class GameScene extends Phaser.Scene {
           // Escalón 1: Plataforma baja
           { x: 0, y: height - 180, type: 'platform', isPlatform: true },
           
-          // 2 púas
-          { x: 130, y: height - 115, type: 'obstacle3' },
-          { x: 180, y: height - 115, type: 'obstacle3' },
+          // 2 púas - MOVIDAS MÁS A LA DERECHA
+          { x: 200, y: height - 115, type: 'obstacle3' },
+          { x: 260, y: height - 115, type: 'obstacle3' },
           
           // Escalón 2: Plataforma media
-          { x: 280, y: height - 220, type: 'platform', isPlatform: true },
+          { x: 380, y: height - 220, type: 'platform', isPlatform: true },
           
           // 2 púas
-          { x: 410, y: height - 115, type: 'obstacle3' },
-          { x: 460, y: height - 115, type: 'obstacle3' },
+          { x: 520, y: height - 115, type: 'obstacle3' },
+          { x: 580, y: height - 115, type: 'obstacle3' },
           
           // Escalón 3: Plataforma alta
-          { x: 560, y: height - 260, type: 'platform', isPlatform: true },
+          { x: 700, y: height - 260, type: 'platform', isPlatform: true },
           
           // 2 púas
-          { x: 690, y: height - 115, type: 'obstacle3' },
-          { x: 740, y: height - 115, type: 'obstacle3' },
+          { x: 840, y: height - 115, type: 'obstacle3' },
+          { x: 900, y: height - 115, type: 'obstacle3' },
           
           // Escalón 4: Plataforma muy alta
-          { x: 840, y: height - 300, type: 'platform', isPlatform: true },
+          { x: 1020, y: height - 300, type: 'platform', isPlatform: true },
           
           // 1 púa final
-          { x: 970, y: height - 115, type: 'obstacle3' }
+          { x: 1160, y: height - 115, type: 'obstacle3' }
         ]
       },
 
@@ -315,19 +324,119 @@ export class GameScene extends Phaser.Scene {
         distance: 1900,
         obstacles: [
           { x: 0, y: height - 110, type: 'obstacle1' },
-          { x: 260, y: height - 110, type: 'obstacle1' },
-          { x: 520, y: height - 110, type: 'obstacle2' }
+          { x: 320, y: height - 110, type: 'obstacle1' },
+          { x: 660, y: height - 110, type: 'obstacle2' }
         ]
       },
 
-      // Final de Nivel 2 (1980m) - patrón mixto, prepara nivel 3
+      // Final de Nivel 2 (1960m) - patrón mixto, prepara nivel 3
       {
-        distance: 1980,
+        distance: 1960,
         obstacles: [
           { x: 0, y: height - 115, type: 'obstacle3' },
-          { x: 360, y: height - 210, type: 'platform', isPlatform: true },
-          { x: 480, y: height - 115, type: 'obstacle3' },
-          { x: 720, y: height - 115, type: 'obstacle3' }
+          { x: 380, y: height - 210, type: 'platform', isPlatform: true },
+          { x: 540, y: height - 115, type: 'obstacle3' },
+          { x: 820, y: height - 115, type: 'obstacle3' }
+        ]
+      },
+
+      // ═══════════════════════════════════════════════════════════
+      // 🟠 NIVEL 3 (2000m - 3000m) - Portales y desafío final
+      // ═══════════════════════════════════════════════════════════
+
+      // Inicio del nivel 3 - Una púa sola (2050m)
+      {
+        distance: 2050,
+        obstacles: [
+          { x: 0, y: height - 115, type: 'obstacle3' }
+        ]
+      },
+
+      // Caja simple (2180m)
+      {
+        distance: 2180,
+        obstacles: [
+          { x: 0, y: height - 110, type: 'obstacle1' }
+        ]
+      },
+
+      // Plataforma alta (2300m)
+      {
+        distance: 2300,
+        obstacles: [
+          { x: 0, y: height - 240, type: 'platform', isPlatform: true }
+        ]
+      },
+
+      // ═══════════════════════════════════════════════════════════
+      // ✈️ ZONA DE VUELO: 2450m - 2900m (Obstáculos distribuidos)
+      // Obstáculos en ALTO (800-1000), MEDIO (500-700), BAJO (250-400)
+      // ═══════════════════════════════════════════════════════════
+
+      // Patrón 1 (2500m) - Obstáculo abajo, obliga a ir arriba
+      {
+        distance: 2500,
+        obstacles: [
+          { x: 0, y: height - 300, type: 'obstacle2' }  // ABAJO - debes ir ARRIBA
+        ]
+      },
+
+      // Patrón 2 (2580m) - Obstáculo arriba, obliga a ir abajo
+      {
+        distance: 2580,
+        obstacles: [
+          { x: 0, y: height - 900, type: 'obstacle2' }  // ARRIBA - debes ir ABAJO
+        ]
+      },
+
+      // Patrón 3 (2660m) - Obstáculo en medio, puedes ir arriba o abajo
+      {
+        distance: 2660,
+        obstacles: [
+          { x: 0, y: height - 600, type: 'obstacle2' }  // MEDIO - elige arriba o abajo
+        ]
+      },
+
+      // Patrón 4 (2730m) - Dos obstáculos: arriba y abajo, debes ir al medio
+      {
+        distance: 2730,
+        obstacles: [
+          { x: 0, y: height - 950, type: 'obstacle1' },  // ARRIBA
+          { x: 0, y: height - 280, type: 'obstacle1' }   // ABAJO - debes pasar por el MEDIO
+        ]
+      },
+
+      // Patrón 5 (2800m) - Obstáculo abajo
+      {
+        distance: 2800,
+        obstacles: [
+          { x: 0, y: height - 350, type: 'obstacle2' }  // ABAJO
+        ]
+      },
+
+      // Patrón 6 (2870m) - Obstáculo arriba (último antes de salir)
+      {
+        distance: 2870,
+        obstacles: [
+          { x: 0, y: height - 850, type: 'obstacle2' }  // ARRIBA
+        ]
+      },
+
+      // === FIN ZONA DE VUELO A LOS 2900m ===
+
+      // Plataforma de aterrizaje después del vuelo (2910m)
+      {
+        distance: 2910,
+        obstacles: [
+          { x: 0, y: height - 220, type: 'platform', isPlatform: true }
+        ]
+      },
+
+      // Sprint final de púas (2930m) - Última prueba antes de la victoria
+      {
+        distance: 2930,
+        obstacles: [
+          { x: 0, y: height - 115, type: 'obstacle3' }
         ]
       }
     ];
@@ -358,7 +467,7 @@ export class GameScene extends Phaser.Scene {
       this.robot.body.setGravityY(1500);
     }
     
-    this.physics.add.collider(this.robot, this.ground);
+    this.groundCollider = this.physics.add.collider(this.robot, this.ground);
     
     // Efecto de brillo sutil en el robot
     this.tweens.add({
@@ -374,7 +483,12 @@ export class GameScene extends Phaser.Scene {
     this.obstacles = this.physics.add.group();
     this.platforms = this.physics.add.group();
     this.gaps = this.add.group();
+    this.portals = this.physics.add.group();
     
+    // Overlap global con portales (más robusto que por-portal)
+    const portalOverlap = this.physics.add.overlap(this.robot, this.portals, this.onPortalOverlap as any, undefined, this);
+    console.log(`✅ Overlap entre robot y portales registrado:`, portalOverlap);
+
     // Zona de muerte (debajo del suelo)
     this.deathZone = height + 100;
 
@@ -389,6 +503,9 @@ export class GameScene extends Phaser.Scene {
     
     // 👻 Colisión con plataformas que detecta choques laterales
     this.platformCollider = this.physics.add.collider(this.robot, this.platforms, this.hitPlatform as any, undefined, this) as Phaser.Physics.Arcade.Collider;
+
+    // Tecla SPACE para vuelo
+    this.spaceKey = this.input.keyboard?.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 
     // Update loop para distancia, velocidad y spawning de chunks
     this.time.addEvent({
@@ -498,6 +615,27 @@ export class GameScene extends Phaser.Scene {
     }
   }
 
+  // update() se ejecuta en cada frame (60 fps) - Para detección precisa de colisiones
+  update(): void {
+    if (this.isPaused || !this.robot || !this.robot.body) return;
+    
+    // Log periódico para verificar que update() se está ejecutando
+    if (this.portals.children.size > 0 && Math.floor(Date.now() / 1000) % 5 === 0) {
+      console.log(`🔄 update() ejecutándose - Portales: ${this.portals.children.size}, isFlying: ${this.isFlying}`);
+    }
+    
+    // Actualizar posición de las etiquetas de los portales
+    this.portals.children.entries.forEach((portal: any) => {
+      if (portal && portal.portalLabel && portal.active) {
+        portal.portalLabel.x = portal.x;
+        portal.portalLabel.y = portal.y;
+      }
+    });
+    
+    // Verificar colisiones con portales en cada frame para mejor precisión
+    this.checkPortalCollisions();
+  }
+
   private updateGame(): void {
     // No actualizar si está pausado
     if (this.isPaused) {
@@ -545,6 +683,52 @@ export class GameScene extends Phaser.Scene {
     // Actualizar nivel según distancia
     this.updateLevel();
 
+    // Debug: mostrar cuántos portales hay en pantalla
+    if (this.portals.children.size > 0 && Math.floor(this.distance) % 100 === 0) {
+      console.log(`🌀 Portales activos: ${this.portals.children.size}, distancia: ${this.distance}m, isFlying: ${this.isFlying}`);
+    }
+
+    // Control de vuelo
+    if (this.isFlying) {
+      // Empuje hacia arriba si se mantiene click/space, si no cae suave
+      const upPressed = this.input.activePointer.isDown || !!this.spaceKey?.isDown;
+      if (upPressed) {
+        // Aceleración MUY RÁPIDA hacia arriba
+        this.robot.setVelocityY(Math.max(this.robot.body.velocity.y - 120, -this.flyMaxSpeed));
+      } else {
+        // Caída MUY RÁPIDA cuando sueltas
+        this.robot.setVelocityY(Math.min(this.robot.body.velocity.y + 100, this.flyMaxSpeed));
+      }
+      // Inclinación visual según velocidad
+      this.robot.setAngle(Phaser.Math.Clamp(-this.robot.body.velocity.y / 20, -30, 30));
+      // Mantener dentro de pantalla
+      if (this.robot.y < 80) this.robot.y = 80;
+      if (this.robot.y > this.cameras.main.height - 70) this.robot.y = this.cameras.main.height - 70;
+      
+      // Log cada segundo para debug
+      if (Math.floor(this.distance) % 50 === 0) {
+        console.log(`✈️ VOLANDO - distancia: ${this.distance}m, velocidad Y: ${this.robot.body.velocity.y}`);
+      }
+    } else {
+      this.robot.setAngle(0);
+    }
+
+    // 🔥 ACTIVAR MODO VUELO POR DISTANCIA CON INDICADOR VISUAL
+    // Zona de vuelo MÁS LARGA: 2450m - 2900m (450 metros de vuelo)
+    if (this.distance >= 2450 && this.distance < 2900 && !this.isFlying && !this.flyZoneEntered) {
+      console.log('🚀 ACTIVANDO MODO VUELO AUTOMÁTICO a los 2450m');
+      this.showFlyZoneIndicator('enter');
+      this.enterFlyMode();
+      this.flyZoneEntered = true;
+    }
+    
+    if (this.distance >= 2900 && this.isFlying && !this.flyZoneExited) {
+      console.log('🚶 DESACTIVANDO MODO VUELO AUTOMÁTICO a los 2900m');
+      this.showFlyZoneIndicator('exit');
+      this.exitFlyMode();
+      this.flyZoneExited = true;
+    }
+
     // Verificar victoria (3000m completa los 3 niveles)
     if (this.distance >= 3000 && !this.physics.world.isPaused) {
       console.log('✅ Alcanzaste 3000m - Llamando victoria...');
@@ -566,6 +750,13 @@ export class GameScene extends Phaser.Scene {
         platform.destroy();
       }
     });
+
+    // Destruir portales que salieron por la izquierda
+    this.portals.children.entries.forEach((portal: any) => {
+      if (portal && portal.x < -300) {
+        portal.destroy();
+      }
+    });
   }
   
   private spawnChunks(): void {
@@ -575,6 +766,7 @@ export class GameScene extends Phaser.Scene {
       
       // Si alcanzamos la distancia del chunk y no lo hemos spawneado
       if (this.distance >= chunk.distance && !this.spawnedChunks.has(i)) {
+        console.log(`📦 Spawneando chunk #${i} a distancia ${chunk.distance}m (actual: ${this.distance}m)`);
         this.spawnChunkObstacles(chunk);
         this.spawnedChunks.add(i);
         this.currentChunkIndex = i + 1;
@@ -593,7 +785,11 @@ export class GameScene extends Phaser.Scene {
     chunk.obstacles.forEach((obs, index) => {
       const spawnX = baseSpawnX + obs.x;
       
-      if (obs.isPlatform) {
+      if (obs.type === 'portal_fly') {
+        this.createPortal(spawnX, obs.y, 'fly');
+      } else if (obs.type === 'portal_ground') {
+        this.createPortal(spawnX, obs.y, 'ground');
+      } else if (obs.isPlatform) {
         // Crear plataforma
         this.createPlatform(spawnX, obs.y);
       } else {
@@ -634,6 +830,7 @@ export class GameScene extends Phaser.Scene {
 
   private showLevelTransition(): void {
     // Pausar el juego
+    this.isPaused = true;
     this.physics.pause();
 
     // Cambiar color de fondo
@@ -684,6 +881,7 @@ export class GameScene extends Phaser.Scene {
           levelBanner.destroy();
           levelNameText.destroy();
           this.physics.resume();
+          this.isPaused = false;
         }
       });
     });
@@ -843,6 +1041,253 @@ export class GameScene extends Phaser.Scene {
     // Si el choque es desde arriba, actúa como plataforma normal (no hace nada especial)
   }
 
+  // Portales de modo vuelo
+  private createPortal(x: number, y: number, kind: 'fly' | 'ground'): void {
+    // Crear textura del portal en tiempo real
+    const color = kind === 'fly' ? 0x00ffff : 0xff00ff;
+    const graphics = this.add.graphics();
+    graphics.fillStyle(color, 0.9);
+    graphics.fillRect(0, 0, 120, 280);
+    graphics.generateTexture(`portal_${kind}_${Date.now()}`, 120, 280);
+    graphics.destroy();
+    
+    // IMPORTANTE: Usar SPRITE para que la física funcione
+    const portal = this.physics.add.sprite(x, y, `portal_${kind}_${Date.now()}`);
+    portal.setDepth(10);
+    
+    // Guardar el tipo de portal
+    (portal as any).portalKind = kind;
+    (portal as any).activated = false;
+    
+    // Configurar física
+    const body = portal.body as Phaser.Physics.Arcade.Body;
+    body.setAllowGravity(false);
+    body.setVelocityX(-this.currentSpeed);
+    body.setSize(120, 280);
+    
+    // Texto visible
+    const label = this.add.text(x, y, kind === 'fly' ? '✈️ VOLAR' : '🚶 SUELO', { 
+      fontSize: '28px', 
+      color: '#000',
+      fontStyle: 'bold',
+      backgroundColor: '#fff',
+      padding: { x: 10, y: 5 }
+    }).setOrigin(0.5).setDepth(11);
+    (portal as any).portalLabel = label;
+    
+    console.log(`🌀 Portal ${kind} creado en x:${x} y:${y}`);
+    console.log(`   Velocidad: ${body.velocity.x}, Body enabled: ${body.enable}`);
+    
+    // Agregar al grupo
+    this.portals.add(portal);
+    
+    console.log(`   ✅ Portal SPRITE agregado. Total: ${this.portals.children.size}`);
+  }
+  
+  // Verificar colisiones con portales (llamado desde updateGame)
+  private checkPortalCollisions(): void {
+    if (this.portals.children.size === 0) return;
+    
+    // Log posiciones cada segundo
+    const now = Math.floor(Date.now() / 1000);
+    const shouldLog = now % 2 === 0;
+    
+    this.portals.children.entries.forEach((portal: any) => {
+      if (!portal || !portal.active) return;
+      
+      if (portal.activated) return;
+      
+      // Log SIEMPRE la distancia entre robot y portal
+      const distance = Math.abs(portal.x - this.robot.x);
+      if (shouldLog) {
+        console.log(`📍 Robot X:${Math.floor(this.robot.x)}, Portal X:${Math.floor(portal.x)}, Distancia: ${Math.floor(distance)}px, Kind: ${portal.portalKind}`);
+      }
+      
+      // Verificar overlap manual
+      const robotBounds = this.robot.getBounds();
+      const portalBounds = portal.getBounds();
+      
+      // Log cada vez que hay un portal cerca
+      if (distance < 400) {
+        console.log(`🔍 Portal CERCA! Distancia: ${distance}px, Robot X:${this.robot.x}, Portal X:${portal.x}, Portal Kind: ${portal.portalKind}`);
+        console.log(`Robot bounds: x:${robotBounds.x}, y:${robotBounds.y}, w:${robotBounds.width}, h:${robotBounds.height}`);
+        console.log(`Portal bounds: x:${portalBounds.x}, y:${portalBounds.y}, w:${portalBounds.width}, h:${portalBounds.height}`);
+      }
+      
+      if (Phaser.Geom.Intersects.RectangleToRectangle(robotBounds, portalBounds)) {
+        portal.activated = true;
+        const kind = portal.portalKind;
+        
+        console.log(`🎯 ¡¡¡COLISIÓN DETECTADA!!! Portal ${kind} ACTIVADO en ${this.distance}m - isFlying antes: ${this.isFlying}`);
+        
+        if (kind === 'fly') {
+          this.enterFlyMode();
+        } else {
+          this.exitFlyMode();
+        }
+        
+        console.log(`🎯 Portal ${kind} - isFlying después: ${this.isFlying}`);
+        
+        // Consumir el portal y sus elementos visuales
+        if (portal.portalLabel) portal.portalLabel.destroy();
+        portal.destroy();
+      }
+    });
+  }
+
+  // Manejador central de overlaps con portales usando Arcade Physics
+  private onPortalOverlap(_robot: any, portalObj: any): void {
+    console.log(`🎯🎯🎯 OVERLAP DETECTADO POR PHASER ARCADE!!! 🎯🎯🎯`);
+    const portal = portalObj as any;
+    console.log(`   Portal object:`, portal);
+    console.log(`   Portal kind: ${portal.portalKind}`);
+    console.log(`   Portal activated: ${portal.activated}`);
+    
+    if (!portal) {
+      console.log(`   ❌ Portal es null/undefined`);
+      return;
+    }
+    
+    if (portal.activated) {
+      console.log(`   ⚠️ Portal ya fue activado antes`);
+      return;
+    }
+    
+    portal.activated = true;
+    const kind = portal.portalKind || 'fly';
+    console.log(`🎯 ACTIVANDO PORTAL ${kind} - distancia: ${this.distance}m`);
+    
+    if (kind === 'fly') {
+      console.log(`   ➡️ Llamando enterFlyMode()`);
+      this.enterFlyMode();
+    } else {
+      console.log(`   ➡️ Llamando exitFlyMode()`);
+      this.exitFlyMode();
+    }
+    
+    if (portal.portalLabel) portal.portalLabel.destroy();
+    portal.destroy();
+    console.log(`   ✅ Portal destruido`);
+  }
+
+  // Mostrar indicador visual de zona de vuelo
+  private showFlyZoneIndicator(type: 'enter' | 'exit'): void {
+    const { width, height } = this.cameras.main;
+    const color = type === 'enter' ? 0x00ffff : 0xff00ff;
+    const text = type === 'enter' ? '✈️ ZONA DE VUELO' : '🚶 FIN DE VUELO';
+    const subtitle = type === 'enter' ? 'Mantén presionado para subir' : 'Modo normal activado';
+    
+    // Fondo semitransparente
+    const bg = this.add.rectangle(width / 2, height / 2, width, height, 0x000000, 0.5);
+    bg.setDepth(100);
+    
+    // Portal visual grande 
+    const portal = this.add.rectangle(width / 2, height / 2 - 50, 300, 500, color, 0.8);
+    portal.setDepth(101);
+    
+    // Borde del portal
+    const border = this.add.rectangle(width / 2, height / 2 - 50, 320, 520, color, 0.3);
+    border.setDepth(100);
+    
+    // Texto principal
+    const label = this.add.text(width / 2, height / 2 - 50, text, {
+      fontSize: '64px',
+      color: '#fff',
+      fontStyle: 'bold',
+      stroke: '#000',
+      strokeThickness: 6
+    }).setOrigin(0.5).setDepth(102);
+    
+    // Texto secundario
+    const sublabel = this.add.text(width / 2, height / 2 + 80, subtitle, {
+      fontSize: '32px',
+      color: '#fff',
+      fontStyle: 'bold',
+      backgroundColor: '#000',
+      padding: { x: 15, y: 8 }
+    }).setOrigin(0.5).setDepth(102);
+    
+    // Animación de aparición
+    bg.setAlpha(0);
+    portal.setAlpha(0);
+    border.setAlpha(0);
+    label.setAlpha(0);
+    sublabel.setAlpha(0);
+    
+    this.tweens.add({
+      targets: [bg, portal, border, label, sublabel],
+      alpha: 1,
+      duration: 300,
+      ease: 'Power2'
+    });
+    
+    // Animación de pulso del portal
+    this.tweens.add({
+      targets: [portal, border],
+      scaleX: 1.05,
+      scaleY: 1.05,
+      duration: 400,
+      yoyo: true,
+      repeat: 2
+    });
+    
+    // Desaparecer después de 2 segundos
+    this.time.delayedCall(2000, () => {
+      this.tweens.add({
+        targets: [bg, portal, border, label, sublabel],
+        alpha: 0,
+        duration: 300,
+        onComplete: () => {
+          bg.destroy();
+          portal.destroy();
+          border.destroy();
+          label.destroy();
+          sublabel.destroy();
+        }
+      });
+    });
+  }
+
+  private enterFlyMode(): void {
+    console.log(`✈️ Intentando entrar en modo vuelo. isFlying actual: ${this.isFlying}`);
+    if (this.isFlying) {
+      console.log(`⚠️ Ya estaba en modo vuelo, saliendo...`);
+      return;
+    }
+    this.isFlying = true;
+    if (this.robot.body instanceof Phaser.Physics.Arcade.Body) {
+      this.robot.body.setAllowGravity(false);
+      // Impulso inicial MUY FUERTE hacia arriba
+      this.robot.setVelocityY(-700);
+      // Elevar al robot si está tocando el suelo
+      this.robot.y -= 60;
+      console.log(`✈️ Modo vuelo ACTIVADO - Gravedad desactivada, velocidad reseteada`);
+    }
+    this.groundCollider.active = false;
+    if (this.platformCollider) this.platformCollider.active = false;
+    
+    // Efecto visual de activación
+    this.cameras.main.flash(200, 0, 255, 255); // Flash cyan
+  }
+
+  private exitFlyMode(): void {
+    console.log(`🚶 Intentando salir de modo vuelo. isFlying actual: ${this.isFlying}`);
+    if (!this.isFlying) {
+      console.log(`⚠️ No estaba en modo vuelo, saliendo...`);
+      return;
+    }
+    this.isFlying = false;
+    if (this.robot.body instanceof Phaser.Physics.Arcade.Body) {
+      this.robot.body.setAllowGravity(true);
+      console.log(`🚶 Modo vuelo DESACTIVADO - Gravedad reactivada`);
+    }
+    this.groundCollider.active = true;
+    if (this.platformCollider) this.platformCollider.active = true;
+    this.robot.setAngle(0);
+    
+    // Efecto visual de desactivación
+    this.cameras.main.flash(200, 255, 0, 255); // Flash magenta
+  }
 
   private async gameOver(): Promise<void> {
     this.physics.pause();
@@ -871,7 +1316,8 @@ export class GameScene extends Phaser.Scene {
     this.cameras.main.once('camerafadeoutcomplete', () => {
       this.scene.start('VictoryScene', {
         distance: this.distance,
-        level: this.currentLevel
+        level: this.currentLevel,
+        lives: this.lives
       });
     });
   }
