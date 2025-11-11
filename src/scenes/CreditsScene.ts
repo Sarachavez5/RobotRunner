@@ -8,13 +8,13 @@ export class CreditsScene extends Phaser.Scene {
   create(): void {
     const { width, height } = this.cameras.main;
 
-    // Fade in
+    // Efecto de fade-in al entrar a la escena
     this.cameras.main.fadeIn(500);
 
-    // Fondo con estrellas
+    // Fondo azul oscuro
     this.cameras.main.setBackgroundColor(0x000033);
 
-    // Estrellas de fondo
+    // Estrellas 
     for (let i = 0; i < 50; i++) {
       const star = this.add.circle(
         Phaser.Math.Between(0, width),
@@ -33,7 +33,7 @@ export class CreditsScene extends Phaser.Scene {
       });
     }
 
-    // Título
+    // Titlel CRÉDITOS
     const title = this.add.text(width / 2, 150, 'CRÉDITOS', {
       fontSize: '64px',
       color: '#00ffff',
@@ -43,7 +43,7 @@ export class CreditsScene extends Phaser.Scene {
       strokeThickness: 6
     }).setOrigin(0.5);
 
-    // Robot decorativo
+    // Robot
     const robot = this.add.graphics();
     robot.fillStyle(0x00ff00);
     robot.fillRect(-30, -40, 60, 80);
@@ -63,7 +63,7 @@ export class CreditsScene extends Phaser.Scene {
       ease: 'Sine.easeInOut'
     });
 
-    // Sección de desarrollo
+    // Sección de Developers
     this.add.text(width / 2, 400, 'DESARROLLO', {
       fontSize: '36px',
       color: '#ffaa00',
