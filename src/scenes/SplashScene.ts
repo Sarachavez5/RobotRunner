@@ -10,10 +10,10 @@ export class SplashScene extends Phaser.Scene {
     console.log('🎮 SplashScene create');
     const { width, height } = this.cameras.main;
 
-    // Fondo animado
+    // Fondo azul oscuro con animacion
     const bg = this.add.rectangle(width / 2, height / 2, width, height, 0x000033);
 
-    // Logo animado del juego
+    // Logo del juego (representado por un rectángulo simple aquí)
     const logo = this.add.graphics();
     logo.fillStyle(0x00ff00);
     logo.fillRect(-100, -50, 200, 100);
@@ -36,7 +36,7 @@ export class SplashScene extends Phaser.Scene {
       fontFamily: 'Arial'
     }).setOrigin(0.5);
 
-    // Animación de escala del logo
+    
     this.tweens.add({
       targets: logo,
       scaleX: 1.2,
@@ -46,7 +46,7 @@ export class SplashScene extends Phaser.Scene {
       repeat: 0
     });
 
-    // Animación de fade in del título
+    // Animación de aparición del texto
     title.setAlpha(0);
     subtitle.setAlpha(0);
 
@@ -64,7 +64,7 @@ export class SplashScene extends Phaser.Scene {
       delay: 700
     });
 
-    // Partículas de fondo
+    // Partículas
     for (let i = 0; i < 20; i++) {
       const star = this.add.circle(
         Phaser.Math.Between(0, width),
@@ -83,7 +83,7 @@ export class SplashScene extends Phaser.Scene {
       });
     }
 
-    // Sonido de inicio (beep sintético con Web Audio API)
+    // Sonido de inicio
     this.playStartSound();
 
     // Texto de carga
@@ -100,7 +100,7 @@ export class SplashScene extends Phaser.Scene {
       repeat: -1
     });
 
-    // Transición al menú después de 3 segundos
+    // Trancisión a MenuScene después de 3 segundos
     this.time.delayedCall(3000, () => {
       console.log('🎮 Cambiando a MenuScene...');
       this.cameras.main.fadeOut(500);
