@@ -120,20 +120,19 @@ export class BootScene extends Phaser.Scene {
     battery.generateTexture('battery', 40, 60);
     battery.destroy();
 
-    // Crear partículas para efectos
+    // Crear textura de partícula
     const particle = this.add.graphics();
     particle.fillStyle(0xffffff);
     particle.fillCircle(4, 4, 4);
     particle.generateTexture('particle', 8, 8);
     particle.destroy();
 
-    // Generar sonidos con Web Audio API (sonidos básicos)
+    // Generar sonidos con Web Audio API
     this.generateSounds();
   }
 
   private generateSounds(): void {
-    // Los sonidos se generarán programáticamente en cada escena
-    // usando el sistema de audio de Phaser cuando sea necesario
+    // Sonido de salto
   }
 }
 
