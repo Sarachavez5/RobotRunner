@@ -49,7 +49,7 @@ export class ScoresScene extends Phaser.Scene {
 
     // Mostrar puntajes
     const startY = 350;
-    const lineHeight = 80;
+    const lineHeight = 65;
 
     if (scores.length === 0) {
       this.add.text(width / 2, startY + 100, 'No hay puntajes aún', {
@@ -68,33 +68,35 @@ export class ScoresScene extends Phaser.Scene {
         const y = startY + index * lineHeight;
         
         // Número de posición
-        const position = this.add.text(100, y, `${index + 1}.`, {
-          fontSize: '36px',
+        const position = this.add.text(60, y, `${index + 1}.`, {
+          fontSize: '32px',
           color: this.getPositionColor(index),
           fontStyle: 'bold',
           fontFamily: 'Arial'
         });
 
         // Distancia
-        const distance = this.add.text(200, y, `${score.score}m`, {
-          fontSize: '36px',
+        const distance = this.add.text(140, y, `${score.score}m`, {
+          fontSize: '32px',
           color: '#ffffff',
           fontFamily: 'Arial'
         });
 
-        // Nivel
-        const level = this.add.text(450, y, `Nivel ${score.level}`, {
-          fontSize: '28px',
+        // Nivel (corregir para que muestre máximo nivel 3)
+        const levelCorrected = Math.min(score.level, 3);
+        const levelName = this.getLevelName(levelCorrected);
+        const level = this.add.text(width / 2 + 20, y, levelName, {
+          fontSize: '20px',
           color: '#00ffaa',
           fontFamily: 'Arial'
         });
 
         // Fecha
-        const date = this.add.text(width - 100, y, score.date, {
-          fontSize: '24px',
+        const date = this.add.text(width / 2 + 20, y + 25, score.date, {
+          fontSize: '18px',
           color: '#888888',
           fontFamily: 'Arial'
-        }).setOrigin(1, 0);
+        });
 
         // Animación de entrada
         position.setAlpha(0);
@@ -113,13 +115,13 @@ export class ScoresScene extends Phaser.Scene {
 
     // Botón de borrar puntajes (pequeño, abajo)
     if (scores.length > 0) {
-      this.createSmallButton(width / 2, height - 220, 'Borrar Puntajes', 0x660000, async () => {
+      this.createSmallButton(width / 2, 1050, 'Borrar Puntajes', 0x660000, async () => {
         await this.clearScores();
       });
     }
 
     // Botón de volver
-    this.createButton(width / 2, height - 120, 'VOLVER', 0x666666, () => {
+    this.createButton(width / 2, 1160, 'VOLVER', 0x666666, () => {
       this.goBack();
     });
   }
@@ -130,6 +132,15 @@ export class ScoresScene extends Phaser.Scene {
       case 1: return '#cccccc'; // Plata
       case 2: return '#ff8844'; // Bronce
       default: return '#ffffff';
+    }
+  }
+
+  private getLevelName(level: number): string {
+    switch (level) {
+      case 1: return 'Nivel 1 - Fábrica Oscura';
+      case 2: return 'Nivel 2 - Zona Industrial';
+      case 3: return 'Nivel 3 - Reactor Final';
+      default: return `Nivel ${level}`;
     }
   }
 
