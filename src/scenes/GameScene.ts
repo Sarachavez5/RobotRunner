@@ -48,20 +48,20 @@ export class GameScene extends Phaser.Scene {
   
   
   private isFlying: boolean = false;
-  private flyMaxSpeed = 1200; // Velocidad muy rápida para control super responsivo
+  private flyMaxSpeed = 1200; // Velocidad máxima durante el vuelo
   private spaceKey?: Phaser.Input.Keyboard.Key;
   private flyZoneEntered: boolean = false;
   private flyZoneExited: boolean = false;
   
-  // Sistema de chunks predefinidos
+  // Nivel y chunks
   private levelChunks!: LevelChunk[];
   private currentChunkIndex: number = 0;
   private spawnedChunks: Set<number> = new Set();
   
   private levelColors = [
-    { bg: 0x1a1a2e, ground: 0x16213e, name: 'Fábrica Oscura' },      // Nivel 1: Azul oscuro
-    { bg: 0x0f4c75, ground: 0x1b262c, name: 'Zona Industrial' },     // Nivel 2: Azul metálico
-    { bg: 0xff6348, ground: 0xe55039, name: 'Reactor Final' }        // Nivel 3: Naranja/Rojo - FINAL
+    { bg: 0x1a1a2e, ground: 0x16213e, name: 'Fábrica Oscura' },      // Nivel 1
+    { bg: 0x0f4c75, ground: 0x1b262c, name: 'Zona Industrial' },     // Nivel 2
+    { bg: 0xff6348, ground: 0xe55039, name: 'Reactor Final' }        // Nivel 3
   ];
 
   constructor() {
@@ -69,7 +69,7 @@ export class GameScene extends Phaser.Scene {
   }
 
   init(): void {
-    // RESETEAR TODAS LAS VARIABLES al reiniciar el juego
+    // Inicializar variables
     this.lives = 3;
     this.distance = 0;
     this.currentLevel = 1;
@@ -84,17 +84,18 @@ export class GameScene extends Phaser.Scene {
     this.coyoteTime = 0;
     this.jumpBuffer = 0;
     
-    // Crear los patrones del nivel
+    // Crear el diseño del nivel
     this.createLevelDesign();
   }
   
   private createLevelDesign(): void {
     const { height } = this.cameras.main;
     
-    // NIVEL 1: Patrones espaciados y respirables (0-1000m)
-    // Como Geometry Dash - ritmo constante pero con espacio para reaccionar
+    // ═══════════════════════════════════════════════════════════
+    // 🔴 NIVEL 1 - INTRODUCCIÓN A LAS PÚAS Y PLATAFORMAS (0m - 1000m)
+    // Como Geometry Dash
     this.levelChunks = [
-      // Intro muy suave (80m)
+      // Bloque inicial (0m)
       {
         distance: 80,
         obstacles: [
@@ -102,7 +103,7 @@ export class GameScene extends Phaser.Scene {
         ]
       },
       
-      // Caja (140m)
+      // Bloque simple (140m)
       {
         distance: 140,
         obstacles: [
@@ -110,7 +111,7 @@ export class GameScene extends Phaser.Scene {
         ]
       },
       
-      // Primera púa (200m)
+      // Púa simple (200m)
       {
         distance: 200,
         obstacles: [
