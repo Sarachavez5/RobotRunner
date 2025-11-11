@@ -274,7 +274,7 @@ npx cap open android
 
 Proyecto académico desarrollado para el curso de Aplicaciones Móviles - 2025
 
-**Universidad:** Universidad del Valle  
+**Universidad:** Universidad Pontificia Bolivariana  
 **Curso:** Aplicaciones Móviles - Octavo Semestre
 
 ---
