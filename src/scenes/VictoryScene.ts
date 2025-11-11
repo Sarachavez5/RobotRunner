@@ -18,13 +18,13 @@ export class VictoryScene extends Phaser.Scene {
   create(): void {
     const { width, height } = this.cameras.main;
 
-    // Fade in
+    // Efecto de fade-in al entrar a la escena
     this.cameras.main.fadeIn(500);
 
-    // Fondo brillante
+    // Fondo verde oscuro
     this.cameras.main.setBackgroundColor(0x001a00);
 
-    // Partículas de celebración
+    // Partículas brillantes
     for (let i = 0; i < 30; i++) {
       const particle = this.add.circle(
         Phaser.Math.Between(0, width),
@@ -43,7 +43,7 @@ export class VictoryScene extends Phaser.Scene {
       });
     }
 
-    // Título Victoria
+    // Titlel Victoria
     const victoryText = this.add.text(width / 2, 200, '¡VICTORIA!', {
       fontSize: '80px',
       color: '#00ff00',
@@ -53,7 +53,7 @@ export class VictoryScene extends Phaser.Scene {
       strokeThickness: 8
     }).setOrigin(0.5);
 
-    // Animación de entrada
+    // Animación entrada
     victoryText.setScale(0);
     this.tweens.add({
       targets: victoryText,
@@ -91,7 +91,7 @@ export class VictoryScene extends Phaser.Scene {
       delay: 900
     });
 
-    // Robot feliz
+    // Happy Robot
     const robot = this.add.graphics();
     robot.fillStyle(0x00ff00);
     robot.fillRect(-30, -40, 60, 80);
@@ -129,7 +129,7 @@ export class VictoryScene extends Phaser.Scene {
       fontFamily: 'Arial'
     }).setOrigin(0.5);
 
-    // Nombres de los niveles completados
+    // Nombres de niveles completados
     const levelNames = [
       '✓ Fábrica Oscura',
       '✓ Zona Industrial', 
