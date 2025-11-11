@@ -16,10 +16,10 @@ export class GameOverScene extends Phaser.Scene {
   create(): void {
     const { width, height } = this.cameras.main;
 
-    // Fade in
+    // Efecto de fade-in al entrar a la escena
     this.cameras.main.fadeIn(500);
 
-    // Fondo oscuro
+    // Fondo rojo oscuro
     this.cameras.main.setBackgroundColor(0x1a0000);
 
     // Título Game Over
@@ -32,7 +32,7 @@ export class GameOverScene extends Phaser.Scene {
       strokeThickness: 8
     }).setOrigin(0.5);
 
-    // Animación de entrada
+    // Animación de entrada del texto
     gameOverText.setScale(0);
     this.tweens.add({
       targets: gameOverText,
@@ -42,7 +42,7 @@ export class GameOverScene extends Phaser.Scene {
       ease: 'Bounce.easeOut'
     });
 
-    // Robot triste
+    // Sad Robot
     const robot = this.add.graphics();
     robot.fillStyle(0x666666);
     robot.fillRect(-30, -40, 60, 80);
@@ -76,7 +76,7 @@ export class GameOverScene extends Phaser.Scene {
       this.goToMenu();
     });
 
-    // Mensaje motivacional
+    // Texto de intento
     this.add.text(width / 2, height - 100, '¡Inténtalo de nuevo!', {
       fontSize: '24px',
       color: '#aaaaaa',
