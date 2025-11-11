@@ -128,7 +128,7 @@ Ver **[INSTRUCCIONES.md](INSTRUCCIONES.md)** para el proceso completo de:
 
 ### Controles de Movimiento
 - **💻 PC:** 
-  - `ESPACIO` - Saltar / Subir (en modo vuelo)
+  - `ESPACIO o CLIC` - Saltar / Subir (en modo vuelo)
   - `ESC` - Pausar/Reanudar
 - **📱 Móvil:** 
   - `Toca la pantalla` - Saltar / Subir (en modo vuelo)
