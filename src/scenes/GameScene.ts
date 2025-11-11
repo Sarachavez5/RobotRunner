@@ -1,17 +1,17 @@
 import Phaser from 'phaser';
 import { StorageManager } from '../utils/StorageManager';
 
-// Interfaz para definir los obstáculos del nivel
+
 interface LevelChunk {
-  distance: number; // Distancia desde el inicio donde aparece
+  distance: number; 
   obstacles: Array<{
-    x: number;        // Distancia horizontal desde el punto de spawn
-    y: number;        // Altura (negativa desde el suelo)
-    type: string;     // Tipo de obstáculo
-    isPlatform?: boolean; // Si es plataforma o no
+    x: number;        
+    y: number;        
+    type: string;    
+    isPlatform?: boolean; 
   }>;
 }
-
+// Escena principal del juego
 export class GameScene extends Phaser.Scene {
   private robot!: Phaser.Physics.Arcade.Sprite;
   private ground!: Phaser.GameObjects.TileSprite;
@@ -21,7 +21,7 @@ export class GameScene extends Phaser.Scene {
   private portals!: Phaser.Physics.Arcade.Group;
   private deathZone: number = 0;
   
-  // 👻 Colliders para poder desactivarlos durante invencibilidad
+  // Colliders
   private platformCollider!: Phaser.Physics.Arcade.Collider;
   private obstacleCollider!: Phaser.Physics.Arcade.Collider;
   private groundCollider!: Phaser.Physics.Arcade.Collider; // ← nuevo
@@ -34,9 +34,9 @@ export class GameScene extends Phaser.Scene {
   
   private isJumping: boolean = false;
   private isInvincible: boolean = false;
-  private invincibilityTimer: number = 0; // 👻 Tiempo restante de invencibilidad
-  private coyoteTime: number = 0; // Tiempo desde que dejó el suelo
-  private jumpBuffer: number = 0; // Buffer para presionar salto antes de tocar suelo
+  private invincibilityTimer: number = 0; // Tiempo restante de invencibilidad
+  private coyoteTime: number = 0; // Tiempo para permitir salto después de dejar el suelo
+  private jumpBuffer: number = 0; 
   
   private livesText!: Phaser.GameObjects.Text;
   private distanceText!: Phaser.GameObjects.Text;
@@ -46,7 +46,7 @@ export class GameScene extends Phaser.Scene {
   private pauseButton!: Phaser.GameObjects.Container;
   private pauseOverlay!: Phaser.GameObjects.Container;
   
-  // Modo vuelo tipo Geometry Dash
+  
   private isFlying: boolean = false;
   private flyMaxSpeed = 1200; // Velocidad muy rápida para control super responsivo
   private spaceKey?: Phaser.Input.Keyboard.Key;
