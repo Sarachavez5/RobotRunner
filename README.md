@@ -298,5 +298,3 @@ Proyecto académico desarrollado para el curso de Aplicaciones Móviles - 2025
 ## 🎉 ¡Gracias por Jugar!
 
 Si tienes preguntas o encuentras algún bug, por favor abre un issue en el repositorio.
-
-Para información detallada sobre cómo compilar y publicar en Google Play, consulta [INSTRUCCIONES.md](INSTRUCCIONES.md)
