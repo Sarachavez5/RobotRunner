@@ -179,56 +179,155 @@ export class GameScene extends Phaser.Scene {
         ]
       },
       
-      // Plataforma con púas (620m) - Segunda zona obligatoria
+      // Plataforma con púas (620m) - FINAL DEL NIVEL 1
       {
         distance: 620,
         obstacles: [
           { x: 200, y: height - 210, type: 'platform', isPlatform: true }, // Plataforma corrida
           { x: 200, y: height - 115, type: 'obstacle3' },  // Púa 1
           { x: 290, y: height - 115, type: 'obstacle3' },  // Púa 2
-          { x: 380, y: height - 115, type: 'obstacle3' }   // Púa 3 (última púa eliminada)
+          { x: 380, y: height - 115, type: 'obstacle3' }   // Púa 3
         ]
       },
-      
-      // Caja simple (700m)
+
+      // 3 PÚAS FINALES - FINAL DEL NIVEL 1 (680m)
       {
-        distance: 700,
+        distance: 680,
         obstacles: [
-          { x: 0, y: height - 110, type: 'obstacle1' }
+          { x: 0, y: height - 115, type: 'obstacle3' },
+          { x: 300, y: height - 115, type: 'obstacle3' },
+          { x: 600, y: height - 115, type: 'obstacle3' }
         ]
       },
-      
-      // Púa solitaria (750m)
+
+      // ═══════════════════════════════════════════════════════════
+      // 🔵 NIVEL 2 - ESCALERA ASCENDENTE (1000m - 2000m)
+      // ═══════════════════════════════════════════════════════════
+
+      // ESCALERA ASCENDENTE (930m) - Sin superposiciones (inicio del Nivel 2)
       {
-        distance: 750,
+        distance: 930,
         obstacles: [
-          { x: 0, y: height - 115, type: 'obstacle3' }
+          // Escalón 1: Plataforma baja
+          { x: 0, y: height - 180, type: 'platform', isPlatform: true },
+          
+          // 2 púas
+          { x: 130, y: height - 115, type: 'obstacle3' },
+          { x: 180, y: height - 115, type: 'obstacle3' },
+          
+          // Escalón 2: Plataforma media
+          { x: 280, y: height - 220, type: 'platform', isPlatform: true },
+          
+          // 2 púas
+          { x: 410, y: height - 115, type: 'obstacle3' },
+          { x: 460, y: height - 115, type: 'obstacle3' },
+          
+          // Escalón 3: Plataforma alta
+          { x: 560, y: height - 260, type: 'platform', isPlatform: true },
+          
+          // 2 púas
+          { x: 690, y: height - 115, type: 'obstacle3' },
+          { x: 740, y: height - 115, type: 'obstacle3' },
+          
+          // Escalón 4: Plataforma muy alta
+          { x: 840, y: height - 300, type: 'platform', isPlatform: true },
+          
+          // 1 púa final
+          { x: 970, y: height - 115, type: 'obstacle3' }
         ]
       },
-      
-      // ÚLTIMA PLATAFORMA sin púas (800m)
+
+      // Bloques: pequeño y grande separados (1120m)
       {
-        distance: 800,
+        distance: 1120,
         obstacles: [
-          { x: 150, y: height - 200, type: 'platform', isPlatform: true }
+          { x: 0, y: height - 110, type: 'obstacle1' },              // pequeño
+          { x: 280, y: height - 140, type: 'obstacle2' }             // grande (corrida para dar respiro)
         ]
       },
-      
-      // Caja simple (850m)
+
+      // Plataformas pegadas → 3 púas → 4 plataformas (1220m)
       {
-        distance: 850,
+        distance: 1220,
         obstacles: [
-          { x: 0, y: height - 110, type: 'obstacle1' }
+          // 4 plataformas pegadas (base continua)
+          { x: 0, y: height - 200, type: 'platform', isPlatform: true },
+          { x: 110, y: height - 200, type: 'platform', isPlatform: true },
+          { x: 220, y: height - 200, type: 'platform', isPlatform: true },
+          { x: 330, y: height - 200, type: 'platform', isPlatform: true },
+          
+          // 3 púas en el suelo
+          { x: 480, y: height - 115, type: 'obstacle3' },
+          { x: 540, y: height - 115, type: 'obstacle3' },
+          { x: 600, y: height - 115, type: 'obstacle3' },
+          
+          // 4 plataformas pegadas para aterrizar
+          { x: 720, y: height - 200, type: 'platform', isPlatform: true },
+          { x: 830, y: height - 200, type: 'platform', isPlatform: true },
+          { x: 940, y: height - 200, type: 'platform', isPlatform: true },
+          { x: 1050, y: height - 200, type: 'platform', isPlatform: true }
         ]
       },
-      
-      // SPRINT FINAL - 3 púas consecutivas (950m) - FINAL DEL NIVEL 1
+
+      // Sección rítmica 1 (1350m) - 2 púas y plataforma media
       {
-        distance: 950,
+        distance: 1350,
         obstacles: [
-          { x: 0, y: height - 115, type: 'obstacle3' },     // Púa 1
-          { x: 300, y: height - 115, type: 'obstacle3' },   // Púa 2 (300px de espacio)
-          { x: 600, y: height - 115, type: 'obstacle3' }    // Púa 3 (300px de espacio) → Nivel 2
+          { x: 0, y: height - 115, type: 'obstacle3' },
+          { x: 60, y: height - 115, type: 'obstacle3' },
+          { x: 220, y: height - 220, type: 'platform', isPlatform: true }
+        ]
+      },
+
+      // Plataformas alternadas (1500m) - sin púas
+      {
+        distance: 1500,
+        obstacles: [
+          { x: 0, y: height - 210, type: 'platform', isPlatform: true },
+          { x: 220, y: height - 250, type: 'platform', isPlatform: true },
+          { x: 440, y: height - 200, type: 'platform', isPlatform: true }
+        ]
+      },
+
+      // Sprint de 3 púas espaciadas (1650m)
+      {
+        distance: 1650,
+        obstacles: [
+          { x: 0, y: height - 115, type: 'obstacle3' },
+          { x: 280, y: height - 115, type: 'obstacle3' },
+          { x: 560, y: height - 115, type: 'obstacle3' }
+        ]
+      },
+
+      // Doble plataforma con hueco y 2 púas en el piso (1800m)
+      {
+        distance: 1800,
+        obstacles: [
+          { x: 0, y: height - 200, type: 'platform', isPlatform: true },
+          { x: 340, y: height - 115, type: 'obstacle3' },
+          { x: 420, y: height - 115, type: 'obstacle3' },
+          { x: 540, y: height - 230, type: 'platform', isPlatform: true }
+        ]
+      },
+
+      // Saltos sobre cajas (1900m)
+      {
+        distance: 1900,
+        obstacles: [
+          { x: 0, y: height - 110, type: 'obstacle1' },
+          { x: 260, y: height - 110, type: 'obstacle1' },
+          { x: 520, y: height - 110, type: 'obstacle2' }
+        ]
+      },
+
+      // Final de Nivel 2 (1980m) - patrón mixto, prepara nivel 3
+      {
+        distance: 1980,
+        obstacles: [
+          { x: 0, y: height - 115, type: 'obstacle3' },
+          { x: 360, y: height - 210, type: 'platform', isPlatform: true },
+          { x: 480, y: height - 115, type: 'obstacle3' },
+          { x: 720, y: height - 115, type: 'obstacle3' }
         ]
       }
     ];
@@ -512,7 +611,7 @@ export class GameScene extends Phaser.Scene {
     if (this.distance >= 2000) {
       newLevel = 3;
       newSpeed = this.baseSpeed * 1.3; // Nivel 3 FINAL: +30% velocidad
-    } else if (this.distance >= 1000) {
+    } else if (this.distance >= 720) {
       newLevel = 2;
       newSpeed = this.baseSpeed * 1.35; // Nivel 2: +35% velocidad
     }
