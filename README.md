@@ -1,12 +1,15 @@
-# 🤖 Robot Runner
+🤖 Robot Runner
 
-**Juego de plataformas auto-runner tipo Geometry Dash** desarrollado con Phaser 3 + Capacitor para Android
+🟦 Auto-runner tipo Geometry Dash, creado con Phaser 3 + Capacitor (Android)
 
 ---
 
-## 📖 Descripción
+📘 Descripción
 
-Robot Runner es un emocionante juego de plataformas auto-runner inspirado en Geometry Dash, donde controlas un robot que debe atravesar 3 niveles llenos de obstáculos. Salta púas, esquiva bloques, sube plataformas y ¡hasta vuela en el nivel final! El robot corre automáticamente mientras tú controlas los saltos y el vuelo. El juego aumenta progresivamente en dificultad y velocidad, culminando en un desafío épico de vuelo en el Reactor Final.
+Robot Runner es un juego auto-runner de plataformas inspirado en Geometry Dash, donde controlas a un robot que avanza automáticamente mientras tú decides cuándo saltar o volar. Supera obstáculos, plataformas, bloques móviles y un épico desafío final en el reactor.
+
+🎮 Tu misión: ¡llegar al final de los 3 niveles sin perder todas tus vidas!
+
 
 ### ✨ Características Principales
 
